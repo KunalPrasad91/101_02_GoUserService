@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gouserservice/config"
 	"gouserservice/routes"
 	"log"
 	"os"
@@ -20,9 +21,11 @@ func main() {
 	}
 
 	port := os.Getenv("PORT")
-	if port == ""{
+	if port == "" {
 		log.Fatal("Port not set")
 	}
+
+	config.ConnectDB()
 
 	router := gin.Default()
 
