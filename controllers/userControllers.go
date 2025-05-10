@@ -11,13 +11,23 @@ import (
 
 func CreateUser(c *gin.Context) {
 
-	var user models.User
+	var dto models.UserRequestDto
+	err := c.BindJSON(&dto)
 
-	c.BindJSON(&user)
+	if err!=nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+	}
 
-	config.DB.Create(&user)
+	user, err := services.CreateUserService(dto)
 
-	c.JSON(http.StatusOK, &user)
+	if err!=nil{
+		
+		  c.JSON(http.StatusConflict, gin.H{"error" : err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, user)
+
 }
 
 func GetUsers(c *gin.Context) {

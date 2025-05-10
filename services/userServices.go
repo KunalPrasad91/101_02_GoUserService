@@ -22,3 +22,47 @@ func GetUserbyId(id string) (*models.UserResponseDto, error) {
 	}, nil
 
 }
+
+func CreateUserService(dto models.UserRequestDto) (*models.UserResponseDto, error) {
+
+	_, err := repositories.FindUserByEmail(dto.Email)
+
+	// err == Nil means user with email found
+	if err==nil{
+		return nil, errors.New("User with email id already exist :- " + dto.Email)
+	}
+
+	user := models.User{
+		Name: dto.Name,
+		Email: dto.Email,
+		Password: dto.Password,
+	}
+
+	createduser, err := repositories.CreateUser(user)
+
+	if err!=nil{
+		return nil, err
+	}
+
+	response := models.UserResponseDto{
+		Id: int(createduser.ID),
+		Name: createduser.Name,
+		Email : createduser.Email,
+	}
+
+	return &response, nil
+
+
+
+
+	// var responsedto models.UserResponseDto
+
+	// responsedto := models.User{
+	// 	Id : user.ID,
+	// 	Name: user.Email,
+	// 	Email: user.Email,
+	// }
+
+
+	
+}
