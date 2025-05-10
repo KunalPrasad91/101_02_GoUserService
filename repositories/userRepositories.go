@@ -5,30 +5,30 @@ import (
 	"gouserservice/models"
 )
 
-func FindUserById(id string) (*models.User,error) {
+func FindUserById(id string) (*models.User, error) {
 
 	var user models.User
 
 	result := config.DB.Where("id=?", id).First(&user)
 
-	if result.Error != nil{
+	if result.Error != nil {
 
-		return nil , result.Error
+		return nil, result.Error
 		//return models.User{}, result.Error
 	}
-	
+
 	return &user, nil
 
 }
 
-func FindUserByEmail(email string) (*models.User, error){
+func FindUserByEmail(email string) (*models.User, error) {
 
 	var user models.User
 
 	result := config.DB.Where("email=?", email).First(&user)
 
-	if result.Error != nil{
-			return nil, result.Error
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &user, nil
@@ -39,10 +39,28 @@ func CreateUser(user models.User) (*models.User, error) {
 
 	result := config.DB.Create(&user)
 
-	if result.Error != nil{
+	if result.Error != nil {
 		return nil, result.Error
 	}
 
 	return &user, nil
-	
+
+}
+
+func DeleteUserById(id string) error {
+
+	var user models.User
+	result := config.DB.Where("id=?", id).First(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	err := config.DB.Delete(&user).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

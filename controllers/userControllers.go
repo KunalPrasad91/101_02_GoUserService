@@ -14,15 +14,15 @@ func CreateUser(c *gin.Context) {
 	var dto models.UserRequestDto
 	err := c.BindJSON(&dto)
 
-	if err!=nil{
-		c.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
 	user, err := services.CreateUserService(dto)
 
-	if err!=nil{
-		
-		  c.JSON(http.StatusConflict, gin.H{"error" : err.Error()})
+	if err != nil {
+
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -40,15 +40,15 @@ func GetUsers(c *gin.Context) {
 
 }
 
-func GetUser(c *gin.Context)  {
-	
+func GetUser(c *gin.Context) {
+
 	id := c.Param("id")
 
 	user, err := services.GetUserbyId(id)
 
-	if err!=nil{
+	if err != nil {
 
-		c.JSON(http.StatusNotFound, gin.H{"error" : err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -57,23 +57,29 @@ func GetUser(c *gin.Context)  {
 
 func DeleteUser(c *gin.Context) {
 
-	var user models.User
-	config.DB.Where("id=?", c.Param("id")).Delete(&user)
+	id := c.Param("id")
 
-	c.JSON(http.StatusOK, &user)
+	err := services.DeleteUserService(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User deleted Successfully id :-" + id})
+
 }
 
-func DeleteAllUser(c *gin.Context)  {
+func DeleteAllUser(c *gin.Context) {
 
-	
 	//result := config.DB.Exec("TRUNCATE TABLE users RESTART IDENTITY CASCADE")
 	result := config.DB.Exec("TRUNCATE TABLE users")
-	
-	if result.Error != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-        return
-    }
 
-    c.JSON(http.StatusOK, gin.H{"message": "All users deleted successfully"})
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "All users deleted successfully"})
 
 }

@@ -51,18 +51,17 @@ func CreateUserService(dto models.UserRequestDto) (*models.UserResponseDto, erro
 	}
 
 	return &response, nil
-
-
-
-
-	// var responsedto models.UserResponseDto
-
-	// responsedto := models.User{
-	// 	Id : user.ID,
-	// 	Name: user.Email,
-	// 	Email: user.Email,
-	// }
-
-
 	
+}
+
+func DeleteUserService(id string)  error {
+
+	err := repositories.DeleteUserById(id)
+
+	if err!=nil{
+		return errors.New("Failed to delete with user id :- " + id)
+	}
+
+	return nil
+
 }
