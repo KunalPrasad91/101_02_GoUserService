@@ -3,6 +3,7 @@ package controllers
 import (
 	"gouserservice/config"
 	"gouserservice/models"
+	"gouserservice/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,21 @@ func GetUsers(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &users)
 
+}
+
+func GetUser(c *gin.Context)  {
+	
+	id := c.Param("id")
+
+	user, err := services.GetUserbyId(id)
+
+	if err!=nil{
+
+		c.JSON(http.StatusNotFound, gin.H{"error" : err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
 func DeleteUser(c *gin.Context) {
