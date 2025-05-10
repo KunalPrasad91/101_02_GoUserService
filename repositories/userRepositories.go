@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"errors"
 	"gouserservice/config"
 	"gouserservice/models"
 )
@@ -63,4 +64,22 @@ func DeleteUserById(id string) error {
 	}
 
 	return nil
+}
+
+func UpdateUser(id string, updates map[string]interface{}) (*models.User, error) {
+
+	var user models.User
+	result := config.DB.Where("id=?", id).First(&user)
+
+	if result.Error != nil {
+		return nil, errors.New("User with id dont exist :- " + id )
+	}
+
+	err := config.DB.Model(&user).Updates(updates)
+
+	if err!=nil{
+		return nil,  errors.New("User with id Update failed :- " + id )
+	}
+
+	return &user, nil
 }

@@ -16,5 +16,6 @@ func UserRoute(router *gin.Engine) {
 		userGroup.DELETE("/:id", controllers.DeleteUser)
 		//router.PATCH("/:id", controllers.UpdateUser)
 		userGroup.DELETE("/", controllers.DeleteAllUser)
+		userGroup.PATCH("/:id", controllers.UpdateUser)
 	}
 }

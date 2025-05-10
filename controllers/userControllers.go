@@ -83,3 +83,27 @@ func DeleteAllUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "All users deleted successfully"})
 
 }
+
+func UpdateUser(c *gin.Context) {
+
+	id := c.Param("id")
+
+	var dto models.UserRequestDto
+
+	err := c.BindJSON(&dto)
+
+	if err!=nil{
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+	
+	createduser, err := services.UpdateUser(id,dto)
+
+	if err!=nil {
+		c.JSON(http.StatusNotFound, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message" : "User updated successully",
+								"user" : createduser})
+
+}
